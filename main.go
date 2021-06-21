@@ -6,6 +6,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -26,6 +27,13 @@ func main() {
 	ebiten.SetWindowTitle("Fantasy")
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
+	}
+
+	viper.SetConfigType("yaml") // REQUIRED if the config file does not have the extension in the name
+	viper.AddConfigPath("./world")
+	err := viper.ReadInConfig() // Find and read the config file
+	if err != nil {             // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %w \n", err))
 	}
 
 }
