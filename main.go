@@ -86,8 +86,6 @@ func init() {
 
 func drawTile(screen *ebiten.Image, s string, x int, y int, l int) {
 
-	fmt.Println(x, y)
-
 	if Tiles[s] != nil {
 		cors := strings.Split(Tiles[s].(string), ",")
 
