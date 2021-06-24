@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"image"
 	_ "image/png"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -14,8 +17,7 @@ const (
 	screenWidth  = 240
 	screenHeight = 240
 	sceenZoom    = 3
-	tileSize     = 16
-	tileXNum     = 25
+	tileSize     = 8
 )
 
 type Game struct {
@@ -42,11 +44,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// const xNum = screenWidth / tileSize
 	// const yNum = screenHeight / tileSize
 
-	t := viper.GetStringSlice("layers")
+	layers := viper.GetStringSlice("layers")
 
-	for _, v := range t {
-		for _, l := range v {
-			drawTile(screen, string(l))
+	for _, layer := range layers {
+		rows := strings.Split(layer, "\n")
+		for y, row := range rows {
+			col := strings.Split(row, "")
+			for x, char := range col {
+				drawTile(screen, char, x, y)
+			}
+
 		}
 	}
 
@@ -64,7 +71,7 @@ func (g *Game) Update() error {
 
 func init() {
 	viper.SetConfigType("yaml") // REQUIRED if the config file does not have the extension in the name
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("./world")
 	// viper.SetConfigName("config")
 
 	err := viper.ReadInConfig() // Find and read the config file
@@ -72,13 +79,31 @@ func init() {
 		panic(fmt.Errorf("Fatal error config file: %w \n", err))
 	}
 
-	img, _, _ = ebitenutil.NewImageFromFile("gfx/Overworld.png")
+	img, _, _ = ebitenutil.NewImageFromFile("world/tiles.png")
+	Tiles = viper.GetStringMap("tiles")
 
 }
 
-func drawTile(screen *ebiten.Image, s string) {
+func drawTile(screen *ebiten.Image, s string, x int, y int) {
 
-	screen.DrawImage(img, nil)
+	fmt.Println(x, y)
+
+	if Tiles[s] != nil {
+		s := strings.Split(Tiles[s].(string), ",")
+
+		tilex, _ := strconv.Atoi(s[0])
+		tiley, _ := strconv.Atoi(s[1])
+
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(float64(x*tileSize), float64(y*tileSize))
+
+		screen.DrawImage(img.SubImage(image.Rect(tilex, tiley, tilex+tileSize, tiley+tileSize)).(*ebiten.Image), op)
+
+		// screen.DrawImage(img, nil)
+
+	}
+
 }
 
 var img *ebiten.Image
+var Tiles map[string]interface{}
