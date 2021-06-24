@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	_ "image/png"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -38,20 +39,16 @@ func main() {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 
-	const xNum = screenWidth / tileSize
-	const yNum = screenHeight / tileSize
+	// const xNum = screenWidth / tileSize
+	// const yNum = screenHeight / tileSize
 
 	t := viper.GetStringSlice("layers")
 
-	// fmt.Println(t)
 	for _, v := range t {
 		for _, l := range v {
 			drawTile(screen, string(l))
 		}
-		// fmt.Printf("Index: %d, Value: %v\n", i, v)
 	}
-
-	// ebitenutil.DebugPrint(screen, "test")
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 
@@ -74,15 +71,14 @@ func init() {
 	if err != nil {             // Handle errors reading the config file
 		panic(fmt.Errorf("Fatal error config file: %w \n", err))
 	}
+
+	img, _, _ = ebitenutil.NewImageFromFile("gfx/Overworld.png")
+
 }
 
 func drawTile(screen *ebiten.Image, s string) {
 
-	// fmt.Println(s)
-	// ebitenutil.DebugPrint(screen, s)
-
-	tile, _, _ := ebitenutil.NewImageFromFile("tiles.png")
-	// op := &ebiten.DrawImageOptions{}
-
-	screen.DrawImage(tile, nil)
+	screen.DrawImage(img, nil)
 }
+
+var img *ebiten.Image
