@@ -17,7 +17,7 @@ const (
 	screenWidth  = 240
 	screenHeight = 240
 	sceenZoom    = 3
-	tileSize     = 8
+	tileSize     = 16
 )
 
 type Game struct {
@@ -93,6 +93,9 @@ func drawTile(screen *ebiten.Image, s string, x int, y int) {
 
 		tilex, _ := strconv.Atoi(s[0])
 		tiley, _ := strconv.Atoi(s[1])
+
+		tilex = tilex * tileSize
+		tiley = tiley * tileSize
 
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(float64(x*tileSize), float64(y*tileSize))

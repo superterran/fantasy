@@ -2,17 +2,56 @@
 name: Chicora
 layers:
   - |
-    xxxxxxxxxxxxxxxxxxxxxxx
-    x                     x
-    x                     x
-    x                     x
-    x    b     x     b    x
-    x                     x
-    x                     x
-    x                     x
-    xxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x            bb               bb               x
+    x            bb             bb                 x    
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x
+    x                                              x    
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 tileFile: ./tiles.png
 tiles:
-  " ": 6,6
-  "x": 5,5
-  "b": 3,3
+  " ": 0,0
+  "x": 1,1
+  "b": 1,1
