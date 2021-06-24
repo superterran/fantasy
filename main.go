@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	screenWidth  = 240
+	screenWidth  = 320
 	screenHeight = 240
 	sceenZoom    = 3
 	tileSize     = 16
@@ -46,12 +46,12 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	layers := viper.GetStringSlice("layers")
 
-	for _, layer := range layers {
+	for l, layer := range layers {
 		rows := strings.Split(layer, "\n")
 		for y, row := range rows {
 			col := strings.Split(row, "")
 			for x, char := range col {
-				drawTile(screen, char, x, y)
+				drawTile(screen, char, x, y, l)
 			}
 
 		}
@@ -84,15 +84,15 @@ func init() {
 
 }
 
-func drawTile(screen *ebiten.Image, s string, x int, y int) {
+func drawTile(screen *ebiten.Image, s string, x int, y int, l int) {
 
 	fmt.Println(x, y)
 
 	if Tiles[s] != nil {
-		s := strings.Split(Tiles[s].(string), ",")
+		cors := strings.Split(Tiles[s].(string), ",")
 
-		tilex, _ := strconv.Atoi(s[0])
-		tiley, _ := strconv.Atoi(s[1])
+		tilex, _ := strconv.Atoi(cors[0])
+		tiley, _ := strconv.Atoi(cors[1])
 
 		tilex = tilex * tileSize
 		tiley = tiley * tileSize
@@ -100,8 +100,9 @@ func drawTile(screen *ebiten.Image, s string, x int, y int) {
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(float64(x*tileSize), float64(y*tileSize))
 
-		screen.DrawImage(img.SubImage(image.Rect(tilex, tiley, tilex+tileSize, tiley+tileSize)).(*ebiten.Image), op)
-
+		if l != 1 || s != " " {
+			screen.DrawImage(img.SubImage(image.Rect(tilex, tiley, tilex+tileSize, tiley+tileSize)).(*ebiten.Image), op)
+		}
 		// screen.DrawImage(img, nil)
 
 	}
