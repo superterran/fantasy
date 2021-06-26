@@ -1,0 +1,5 @@
+---
+name: Nume
+spritesheet: "assets/player.png"
+u: 
+  - 10,60,100,160

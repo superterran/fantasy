@@ -1,5 +1,5 @@
 ---
-tileFile: world/tiles.png
+tileFile: assets/tiles.png
 tiles:
   " ": 0,0
   "x": 4,7
@@ -21,7 +21,7 @@ layers:
     x                  x
     x                  x
     x                  x
-    x                  x
+    x         S        x
     x                  x
     x                  x
     x                  x    
