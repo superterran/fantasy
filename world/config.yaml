@@ -1,5 +1,18 @@
 ---
 name: Chicora
+tileFile: world/tiles.png
+tiles:
+  " ": 0,0
+  "x": 4,7
+  "q": 2,14
+  "r": 2,7
+  "l": 4,7
+  "t": 3,8
+  "b": 3,6
+  "c": 3,9
+  "d": 3,10
+  "e": 2,10
+  "f": 2,9
 layers:
   - |
     xxxxxxxxxxxxxxxxxxxx
@@ -32,17 +45,4 @@ layers:
     l                  r
     l                  r
     l                  r
-    ebbbbbbbbbbbbbbbbbbd     
-tileFile: world/tiles.png
-tiles:
-  " ": 0,0
-  "x": 4,7
-  "q": 2,14
-  "r": 2,7
-  "l": 4,7
-  "t": 3,8
-  "b": 3,6
-  "c": 3,9
-  "d": 3,10
-  "e": 2,10
-  "f": 2,9
+    ebbbbbbbbbbbbbbbbbbd
