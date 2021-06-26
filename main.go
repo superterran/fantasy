@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"example.com/m/v2/config"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/spf13/viper"
@@ -41,9 +42,6 @@ func main() {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 
-	// const xNum = screenWidth / tileSize
-	// const yNum = screenHeight / tileSize
-
 	layers := viper.GetStringSlice("layers")
 
 	for l, layer := range layers {
@@ -70,16 +68,10 @@ func (g *Game) Update() error {
 }
 
 func init() {
-	viper.SetConfigType("yaml") // REQUIRED if the config file does not have the extension in the name
-	viper.AddConfigPath("./world")
-	// viper.SetConfigName("config")
 
-	err := viper.ReadInConfig() // Find and read the config file
-	if err != nil {             // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %w \n", err))
-	}
+	config.LoadConfig()
 
-	img, _, _ = ebitenutil.NewImageFromFile("world/tiles.png")
+	img, _, _ = ebitenutil.NewImageFromFile(viper.GetString("tileFile"))
 	Tiles = viper.GetStringMap("tiles")
 
 }
@@ -101,10 +93,7 @@ func drawTile(screen *ebiten.Image, s string, x int, y int, l int) {
 		if l != 1 || s != " " {
 			screen.DrawImage(img.SubImage(image.Rect(tilex, tiley, tilex+tileSize, tiley+tileSize)).(*ebiten.Image), op)
 		}
-		// screen.DrawImage(img, nil)
-
 	}
-
 }
 
 var img *ebiten.Image

@@ -33,7 +33,7 @@ layers:
     l                  r
     l                  r
     ebbbbbbbbbbbbbbbbbbd     
-tileFile: ./tiles.png
+tileFile: world/tiles.png
 tiles:
   " ": 0,0
   "x": 4,7
