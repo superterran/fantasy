@@ -1,5 +1,4 @@
 ---
-name: Chicora
 tileFile: world/tiles.png
 tiles:
   " ": 0,0
