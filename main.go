@@ -129,18 +129,20 @@ func moveSprite(sprite *viper.Viper) {
 	x := sprite.GetInt("x")
 	y := sprite.GetInt("y")
 
-	switch sprite.GetString("direction") {
-	case "up":
-		sprite.Set("x", x-playerMoveDistance)
-	case "down":
-		sprite.Set("x", x+playerMoveDistance)
-	case "left":
-		sprite.Set("y", y-playerMoveDistance)
-	case "right":
-		sprite.Set("y", y+playerMoveDistance)
-	}
+	if sprite.GetBool("moving") {
+		switch sprite.GetString("direction") {
+		case "up":
+			sprite.Set("y", y-playerMoveDistance)
+		case "down":
+			sprite.Set("y", y+playerMoveDistance)
+		case "left":
+			sprite.Set("x", x-playerMoveDistance)
+		case "right":
+			sprite.Set("x", x+playerMoveDistance)
+		}
 
-	sprite.Set("moving", false)
+		sprite.Set("moving", false)
+	}
 }
 
 func drawSprite(screen *ebiten.Image, sprite *viper.Viper) {
