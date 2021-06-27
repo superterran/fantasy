@@ -10,6 +10,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/spf13/viper"
 )
 
@@ -23,7 +24,7 @@ const (
 )
 
 type Game struct {
-	layers [][]int
+	keys []ebiten.Key
 }
 
 var img *ebiten.Image
@@ -67,7 +68,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	drawSprite(screen, Player) // renders his ass every layer
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
+	ebitenutil.DebugPrint(screen, fmt.Sprintf(" TPS: %0.2f", ebiten.CurrentTPS()))
+
+	keyStrs := []string{}
+	for _, p := range g.keys {
+		keyStrs = append(keyStrs, p.String())
+	}
+	ebitenutil.DebugPrint(screen, "\n "+strings.Join(keyStrs, ", "))
 
 }
 
@@ -76,6 +83,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 }
 
 func (g *Game) Update() error {
+	g.keys = inpututil.PressedKeys()
 	return nil
 }
 
