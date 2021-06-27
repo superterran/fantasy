@@ -165,7 +165,7 @@ func loadPlayer() {
 	Player.SetConfigFile("sprites/player.yaml")
 	Player.ReadInConfig()
 	Player.Set("isSpawned", false)
-	Player.Set("direction", "d")
+	Player.Set("direction", "l")
 	Player.Set("step", 0)
 	player, _, _ = ebitenutil.NewImageFromFile(Player.GetString("spritesheet"))
 
