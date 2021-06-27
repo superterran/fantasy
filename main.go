@@ -19,6 +19,7 @@ const (
 	sceenZoom    = 3
 	tileSize     = 16
 	windowTitle  = "Fantasy!"
+	DefaultTPS   = 5
 )
 
 type Game struct {
@@ -54,19 +55,17 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			col := strings.Split(row, "")
 			for x, char := range col {
 
-				if char == "S" && !Player.GetBool("isSpawned") { // S is the maps spawn point
-					Player.Set("x", x)
-					Player.Set("y", y)
+				if char == "S" { // S is the maps spawn point
+					Player.Set("x", x*tileSize)
+					Player.Set("y", y*tileSize)
 					char = " "
 				}
-
 				drawTile(screen, char, x, y, l)
+
 			}
-
 		}
+		drawSprite(screen, Player) // renders his ass every layer
 	}
-
-	drawSprite(Player)
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 
@@ -87,23 +86,39 @@ func init() {
 
 }
 
-func drawSprite(sprite *viper.Viper) {
+func drawSprite(screen *ebiten.Image, sprite *viper.Viper) {
 
 	sprite.Set("isSpawned", true)
 
-	// var step = sprite.GetString("step")
+	var step = sprite.GetString("step")
 	var dir = sprite.GetString("direction")
 
-	var steps = sprite.GetString(dir)
+	var steps = sprite.GetStringMap(dir)
 
-	fmt.Println(steps)
+	if steps[step] == nil {
+		step = "0"
+	}
 
-	// op := &ebiten.DrawImageOptions{}
-	// 	op.GeoM.Translate(float64(x*tileSize), float64(y*tileSize))
+	var coordstring = steps[step]
 
-	// 	if l != 1 || s != " " {
-	// 		screen.DrawImage(img.SubImage(image.Rect(tilex, tiley, tilex+tileSize, tiley+tileSize)).(*ebiten.Image), op)
-	// 	}
+	cors := strings.Split(coordstring.(string), ",")
+
+	_ = cors
+
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(sprite.GetInt("x")), float64(sprite.GetInt("y")))
+
+	x0, _ := strconv.Atoi(cors[0])
+	y0, _ := strconv.Atoi(cors[1])
+	x1, _ := strconv.Atoi(cors[2])
+	y1, _ := strconv.Atoi(cors[3])
+
+	screen.DrawImage(player.SubImage(image.Rect(x0, y0, x1, y1)).(*ebiten.Image), op)
+
+	stepInt, _ := strconv.Atoi(step)
+
+	stepInt++
+	sprite.Set("step", stepInt)
 
 }
 
@@ -150,7 +165,7 @@ func loadPlayer() {
 	Player.SetConfigFile("sprites/player.yaml")
 	Player.ReadInConfig()
 	Player.Set("isSpawned", false)
-	Player.Set("direction", "u")
+	Player.Set("direction", "d")
 	Player.Set("step", 0)
 	player, _, _ = ebitenutil.NewImageFromFile(Player.GetString("spritesheet"))
 
