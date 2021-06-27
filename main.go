@@ -21,6 +21,7 @@ const (
 	tileSize     = 16
 	windowTitle  = "Fantasy!"
 	DefaultTPS   = 5
+	debug        = true
 )
 
 type Game struct {
@@ -68,14 +69,23 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	drawSprite(screen, Player)
-	ebitenutil.DebugPrint(screen, fmt.Sprintf(" TPS: %0.2f", ebiten.CurrentTPS()))
+	updateFromInput(screen, g)
 
-	keyStrs := []string{}
-	for _, p := range g.keys {
-		keyStrs = append(keyStrs, p.String())
+	if debug {
+		ebitenutil.DebugPrint(screen, fmt.Sprintf(" TPS: %0.2f", ebiten.CurrentTPS()))
 	}
-	ebitenutil.DebugPrint(screen, "\n "+strings.Join(keyStrs, ", "))
 
+}
+
+func updateFromInput(screen *ebiten.Image, g *Game) {
+
+	if debug {
+		keyStrs := []string{}
+		for _, p := range g.keys {
+			keyStrs = append(keyStrs, p.String())
+		}
+		ebitenutil.DebugPrint(screen, "\n "+strings.Join(keyStrs, ", "))
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
