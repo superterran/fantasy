@@ -35,6 +35,8 @@ var Tiles map[string]interface{}
 var Maps *viper.Viper
 var Player *viper.Viper
 
+var debugInfo string
+
 func main() {
 
 	g := &Game{}
@@ -70,12 +72,15 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	moveSprite(Player)
+	debugInfo += "collision: " + strconv.FormatBool(isCollision(Player)) + "\n"
 	drawSprite(screen, Player)
 
 	updateFromInput(screen, g)
 
 	if debug {
-		ebitenutil.DebugPrint(screen, fmt.Sprintf(" TPS: %0.2f", ebiten.CurrentTPS()))
+
+		ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS())+"\n"+debugInfo)
+		debugInfo = ""
 	}
 
 }
@@ -104,7 +109,7 @@ func updateFromInput(screen *ebiten.Image, g *Game) {
 	}
 
 	if debug {
-		ebitenutil.DebugPrint(screen, "\n "+strings.Join(keyStrs, ", "))
+		debugInfo += strings.Join(keyStrs, ", ") + "\n"
 	}
 }
 
@@ -141,6 +146,28 @@ func moveSprite(sprite *viper.Viper) {
 			sprite.Set("x", x+playerMoveDistance)
 		}
 	}
+}
+
+func isCollision(sprite *viper.Viper) bool {
+
+	var collide = false
+
+	x := sprite.GetInt("x") / tileSize
+	y := sprite.GetInt("y") / tileSize
+
+	layers := Maps.GetStringSlice("layers")
+
+	for _, layer := range layers {
+		rows := strings.Split(layer, "\n")
+		cols := strings.Split(rows[y], "")
+
+		if cols[x] != " " {
+			collide = true
+		}
+	}
+
+	return collide
+
 }
 
 func drawSprite(screen *ebiten.Image, sprite *viper.Viper) {
