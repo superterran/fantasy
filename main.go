@@ -160,11 +160,8 @@ func isCollision(sprite *viper.Viper, dir string) bool {
 
 	var collide = false
 
-	// var tileCountX = (screenWidth / tileSize)
-	// var tileCountY = (screenHeight / tileSize)
-
 	var spriteWidth = sprite.GetInt("width")
-	var spriteHeight = 24 // sprite.GetInt("height")
+	var spriteHeight = sprite.GetInt("height")
 
 	x := sprite.GetInt("x")
 	y := sprite.GetInt("y")
@@ -185,38 +182,43 @@ func isCollision(sprite *viper.Viper, dir string) bool {
 		collide = true
 	}
 
+	// top and down boundaries
 	if y > screenHeight-spriteHeight || y < 0 {
 		collide = true
 
 	}
 
-	// if y > spriteHeight && y < screenHeight-spriteHeight {
-	// 	collide = true
-	// }
-
-	// xAdj := screenWidth / x
-	// yAdj := screenHeight / y
-
-	// layers := Maps.GetStringSlice("layers")
-
-	// if xAdj >= 0 && xAdj >= tileCountX {
-	// 	if yAdj <= 0 || yAdj >= tileCountY {
-
-	// 		for _, layer := range layers {
-	// 			rows := strings.Split(layer, "\n")
-	// 			cols := strings.Split(rows[yAdj], "")
-
-	// 			if cols[xAdj] != " " {
-	// 				collide = true
-	// 			}
-	// 		}
-
-	// 	}
-	// }
+	if isPositionOccupied(x, y) {
+		collide = true
+	}
 
 	debugInfo += "collision: " + strconv.Itoa(x) + "," + strconv.Itoa(y) + " " + sprite.GetString("x") + "," + sprite.GetString("y") + " " + strconv.FormatBool(collide) + "\n"
 
 	return collide
+
+}
+
+func isPositionOccupied(x int, y int) bool {
+
+	fmt.Println("-----")
+
+	var tileX float64 = (float64(x) / float64(screenWidth)) * (float64(screenWidth) / float64(tileSize))
+	var tileY float64 = (float64(y) / float64(screenHeight)) * (float64(screenHeight) / float64(tileSize))
+
+	fmt.Println(tileX, tileY)
+
+	layers := Maps.GetStringSlice("layers")
+
+	for _, layer := range layers {
+		rows := strings.Split(layer, "\n")
+		cols := strings.Split(rows[int(tileY)], "")
+
+		if cols[int(tileX)] != " " && cols[int(tileX)] != "S" {
+			return true
+		}
+	}
+
+	return false
 
 }
 

@@ -12,6 +12,7 @@ tiles:
   "d": 3,10
   "e": 2,10
   "f": 2,9
+  
 layers:
   - |
     xxxxxxxxxxxxxxxxxxxx
@@ -35,8 +36,8 @@ layers:
     l                  r
     l                  r
     l        S         r
-    l                  r
-    l                  r
+    l          q       r
+    l      q     q     r
     l   q          q   r
     l                  r
     l                  r
