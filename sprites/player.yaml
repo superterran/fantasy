@@ -1,6 +1,8 @@
 ---
 name: Nume
 spritesheet: "assets/character.png"
+width: 16
+height: 24
 down: 
   0: 0,6,16,28
   1: 16,6,32,28
