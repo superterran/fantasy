@@ -160,8 +160,13 @@ func isCollision(sprite *viper.Viper, dir string) bool {
 
 	var collide = false
 
-	x := sprite.GetInt("x") / (screenWidth / tileSize)
-	y := sprite.GetInt("y") / (screenHeight / tileSize)
+	var tileCountX = (screenWidth / tileSize)
+	var tileCountY = (screenHeight / tileSize)
+
+	var tileHalf = tileSize / 2
+
+	x := sprite.GetInt("x")
+	y := sprite.GetInt("y")
 
 	switch dir {
 	case "up":
@@ -174,18 +179,35 @@ func isCollision(sprite *viper.Viper, dir string) bool {
 		x = x + playerMoveDistance
 	}
 
-	layers := Maps.GetStringSlice("layers")
+	if x > 0 && x < (screenWidth-tileSize) {
+		if y > tileSize-tileHalf && y < (screenHeight-tileSize-tileHalf) {
+			xAdj := screenWidth / x
+			yAdj := screenHeight / y
 
-	for _, layer := range layers {
-		rows := strings.Split(layer, "\n")
-		cols := strings.Split(rows[y], "")
+			layers := Maps.GetStringSlice("layers")
 
-		if cols[x] != " " {
+			if xAdj >= 0 && xAdj >= tileCountX {
+				if yAdj <= 0 || yAdj >= tileCountY {
+
+					for _, layer := range layers {
+						rows := strings.Split(layer, "\n")
+						cols := strings.Split(rows[yAdj], "")
+
+						if cols[xAdj] != " " {
+							collide = true
+						}
+					}
+
+				}
+			}
+		} else {
 			collide = true
 		}
+	} else {
+		collide = true
 	}
 
-	debugInfo += "collision: " + strconv.FormatBool(collide) + "\n"
+	debugInfo += "collision: " + strconv.Itoa(x) + "," + strconv.Itoa(y) + " " + sprite.GetString("x") + "," + sprite.GetString("y") + " " + strconv.FormatBool(collide) + "\n"
 
 	return collide
 
