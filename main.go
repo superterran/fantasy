@@ -214,11 +214,22 @@ func isPositionOccupied(x int, y int) bool {
 		cols := strings.Split(rows[int(tileY)], "")
 
 		if cols[int(tileX)] != " " && cols[int(tileX)] != "S" {
+
+			if _, err := strconv.ParseInt(cols[int(tileX)], 10, 64); err == nil {
+				loadMap(getMapName(cols[int(tileX)]))
+			}
+
 			return true
 		}
 	}
 
 	return false
+
+}
+
+func getMapName(char string) string {
+
+	return Tiles[char].(string)
 
 }
 
@@ -264,6 +275,11 @@ func drawSprite(screen *ebiten.Image, sprite *viper.Viper) {
 }
 
 func drawTile(screen *ebiten.Image, s string, x int, y int, l int) {
+
+	// skip if integer, as this is a door
+	if _, err := strconv.ParseInt(s, 10, 64); err == nil {
+		return
+	}
 
 	if Tiles[s] != nil {
 		cors := strings.Split(Tiles[s].(string), ",")
