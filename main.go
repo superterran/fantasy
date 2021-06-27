@@ -72,7 +72,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	moveSprite(Player)
-	debugInfo += "collision: " + strconv.FormatBool(isCollision(Player)) + "\n"
 	drawSprite(screen, Player)
 
 	updateFromInput(screen, g)
@@ -137,23 +136,43 @@ func moveSprite(sprite *viper.Viper) {
 	if sprite.GetBool("moving") {
 		switch sprite.GetString("direction") {
 		case "up":
-			sprite.Set("y", y-playerMoveDistance)
+			if !isCollision(sprite, "up") {
+				sprite.Set("y", y-playerMoveDistance)
+			}
 		case "down":
-			sprite.Set("y", y+playerMoveDistance)
+			if !isCollision(sprite, "down") {
+				sprite.Set("y", y+playerMoveDistance)
+			}
 		case "left":
-			sprite.Set("x", x-playerMoveDistance)
+			if !isCollision(sprite, "left") {
+				sprite.Set("x", x-playerMoveDistance)
+			}
+
 		case "right":
-			sprite.Set("x", x+playerMoveDistance)
+			if !isCollision(sprite, "right") {
+				sprite.Set("x", x+playerMoveDistance)
+			}
 		}
 	}
 }
 
-func isCollision(sprite *viper.Viper) bool {
+func isCollision(sprite *viper.Viper, dir string) bool {
 
 	var collide = false
 
-	x := sprite.GetInt("x") / tileSize
-	y := sprite.GetInt("y") / tileSize
+	x := sprite.GetInt("x") / (screenWidth / tileSize)
+	y := sprite.GetInt("y") / (screenHeight / tileSize)
+
+	switch dir {
+	case "up":
+		y = (y - playerMoveDistance)
+	case "down":
+		y = (y + playerMoveDistance)
+	case "left":
+		x = x - playerMoveDistance
+	case "right":
+		x = x + playerMoveDistance
+	}
 
 	layers := Maps.GetStringSlice("layers")
 
@@ -165,6 +184,8 @@ func isCollision(sprite *viper.Viper) bool {
 			collide = true
 		}
 	}
+
+	debugInfo += "collision: " + strconv.FormatBool(collide) + "\n"
 
 	return collide
 
