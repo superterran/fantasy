@@ -15,13 +15,14 @@ import (
 )
 
 const (
-	screenWidth  = 320
-	screenHeight = 240
-	sceenZoom    = 3
-	tileSize     = 16
-	windowTitle  = "Fantasy!"
-	DefaultTPS   = 5
-	debug        = true
+	screenWidth        = 320
+	screenHeight       = 240
+	sceenZoom          = 3
+	tileSize           = 16
+	windowTitle        = "Fantasy!"
+	DefaultTPS         = 5
+	debug              = true
+	playerMoveDistance = 10
 )
 
 type Game struct {
@@ -68,7 +69,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
+	moveSprite(Player)
 	drawSprite(screen, Player)
+
 	updateFromInput(screen, g)
 
 	if debug {
@@ -83,14 +86,18 @@ func updateFromInput(screen *ebiten.Image, g *Game) {
 	for _, p := range g.keys {
 
 		switch p.String() {
-		case "W":
+		case "W", "ArrowUp":
 			Player.Set("direction", "up")
-		case "A":
+			Player.Set("moving", true)
+		case "A", "ArrowLeft":
 			Player.Set("direction", "left")
-		case "S":
+			Player.Set("moving", true)
+		case "S", "ArrowDown":
 			Player.Set("direction", "down")
-		case "D":
+			Player.Set("moving", true)
+		case "D", "ArrowRight":
 			Player.Set("direction", "right")
+			Player.Set("moving", true)
 		}
 
 		keyStrs = append(keyStrs, p.String())
@@ -115,6 +122,25 @@ func init() {
 	loadMap("main")
 	loadPlayer()
 
+}
+
+func moveSprite(sprite *viper.Viper) {
+
+	x := sprite.GetInt("x")
+	y := sprite.GetInt("y")
+
+	switch sprite.GetString("direction") {
+	case "up":
+		sprite.Set("x", x-playerMoveDistance)
+	case "down":
+		sprite.Set("x", x+playerMoveDistance)
+	case "left":
+		sprite.Set("y", y-playerMoveDistance)
+	case "right":
+		sprite.Set("y", y+playerMoveDistance)
+	}
+
+	sprite.Set("moving", false)
 }
 
 func drawSprite(screen *ebiten.Image, sprite *viper.Viper) {
