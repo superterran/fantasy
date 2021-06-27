@@ -64,9 +64,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 			}
 		}
-		drawSprite(screen, Player) // renders his ass every layer
 	}
 
+	drawSprite(screen, Player) // renders his ass every layer
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 
 }
