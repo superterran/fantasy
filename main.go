@@ -22,7 +22,7 @@ const (
 	windowTitle        = "Fantasy!"
 	DefaultTPS         = 5
 	debug              = true
-	playerMoveDistance = 10
+	playerMoveDistance = 2
 )
 
 type Game struct {
@@ -58,7 +58,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			col := strings.Split(row, "")
 			for x, char := range col {
 
-				if char == "S" { // S is the maps spawn point
+				if char == "S" && !Player.GetBool("isSpawned") { // S is the maps spawn point
 					Player.Set("x", x*tileSize)
 					Player.Set("y", y*tileSize)
 					char = " "
@@ -140,8 +140,6 @@ func moveSprite(sprite *viper.Viper) {
 		case "right":
 			sprite.Set("x", x+playerMoveDistance)
 		}
-
-		sprite.Set("moving", false)
 	}
 }
 
@@ -158,7 +156,11 @@ func drawSprite(screen *ebiten.Image, sprite *viper.Viper) {
 		step = "0"
 	}
 
-	var coordstring = steps[step]
+	var coordstring = steps["0"]
+
+	if sprite.GetBool("moving") {
+		coordstring = steps[step]
+	}
 
 	cors := strings.Split(coordstring.(string), ",")
 
@@ -178,6 +180,7 @@ func drawSprite(screen *ebiten.Image, sprite *viper.Viper) {
 
 	stepInt++
 	sprite.Set("step", stepInt)
+	sprite.Set("moving", false)
 
 }
 
