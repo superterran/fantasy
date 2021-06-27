@@ -79,11 +79,24 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 func updateFromInput(screen *ebiten.Image, g *Game) {
 
-	if debug {
-		keyStrs := []string{}
-		for _, p := range g.keys {
-			keyStrs = append(keyStrs, p.String())
+	keyStrs := []string{}
+	for _, p := range g.keys {
+
+		switch p.String() {
+		case "W":
+			Player.Set("direction", "up")
+		case "A":
+			Player.Set("direction", "left")
+		case "S":
+			Player.Set("direction", "down")
+		case "D":
+			Player.Set("direction", "right")
 		}
+
+		keyStrs = append(keyStrs, p.String())
+	}
+
+	if debug {
 		ebitenutil.DebugPrint(screen, "\n "+strings.Join(keyStrs, ", "))
 	}
 }
@@ -183,7 +196,7 @@ func loadPlayer() {
 	Player.SetConfigFile("sprites/player.yaml")
 	Player.ReadInConfig()
 	Player.Set("isSpawned", false)
-	Player.Set("direction", "l")
+	Player.Set("direction", "down")
 	Player.Set("step", 0)
 	player, _, _ = ebitenutil.NewImageFromFile(Player.GetString("spritesheet"))
 
